@@ -1,104 +1,85 @@
+# INSTALL DROSERA NETWORK WITH CUSTOM TRAP
 
-# 🚀 INSTALL DROSERA NETWORK WITH CUSTOM TRAP
+**Contract** : `0x342198f808536687fbc5cd824004445ef09e36ba`
 
-**Contract Address:**  
-`0x342198f808536687fbc5cd824004445ef09e36ba`
-
-**Functionality:**  
-Detect Predictable RNG via `isActive()` and auto-send encoded data.
+**Function** : Detect Predictable RNG via `isActive()`
 
 ---
 
-## 🖥️ System Requirements
+## System Requirements
 
-- 2 CPU Cores  
-- 4 GB RAM  
-- 20 GB SSD  
-- OS: Ubuntu 22.04 LTS
+- **Spec**: 4 GB RAM, 2 Core, 20 GB SSD
 
----
+## Tested On
 
-## ✅ Tested On
+- **OS**: Ubuntu 22
 
-🟢 Ubuntu 22.04
+## Mining ETH Hoodi
 
----
-
-## 🌐 Get ETH for Hoodi Network
-
-Use the faucet:  
-[https://hoodi-faucet.pk910.de/](https://hoodi-faucet.pk910.de/)
+- Faucet: [https://hoodi-faucet.pk910.de/](https://hoodi-faucet.pk910.de/)
 
 ---
 
-## ⚙️ Setup Instructions
-
-### 1. Start a screen session
+## Setup
 
 ```bash
 screen -R drosera
 ```
 
-### 2. Install dependencies
-
 ```bash
-sudo apt-get update && sudo apt-get upgrade -y && sudo apt install curl ufw iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev  -y
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt install curl ufw iptables build-essential git wget lz4 jq make gcc nano automake autoconf tmux htop nvme-cli libgbm1 pkg-config libssl-dev libleveldb-dev tar clang bsdmainutils ncdu unzip libleveldb-dev -y && sudo apt update -y && sudo apt upgrade -y && for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
 ```
 
 ```bash
-sudo apt-get install ca-certificates curl gnupg && sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && sudo chmod a+r /etc/apt/keyrings/docker.gpg
+sudo apt-get update && sudo apt-get install ca-certificates curl gnupg && sudo install -m 0755 -d /etc/apt/keyrings && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg && sudo chmod a+r /etc/apt/keyrings/docker.gpg
 ```
 
 ```bash
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+echo \
+  "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  \"$(. /etc/os-release && echo \"$VERSION_CODENAME\")\" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
 ```bash
-sudo apt update -y && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-sudo docker run hello-world
+sudo apt update -y && sudo apt upgrade -y && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && sudo docker run hello-world
 ```
 
----
-
-### 3. Install Drosera CLI
-
 ```bash
-curl -L https://app.drosera.io/install | bash
-source ~/.bashrc
-droseraup
+curl -L https://app.drosera.io/install | bash && source /root/.bashrc && droseraup
 ```
 
-### 4. Install Foundry
-
 ```bash
-curl -L https://foundry.paradigm.xyz | bash
-source ~/.bashrc
-foundryup
+curl -L https://foundry.paradigm.xyz | bash && source /root/.bashrc && foundryup
 ```
 
----
-
-### 5. Init Drosera Trap Project
-
 ```bash
-curl -fsSL https://bun.sh/install | bash
-mkdir my-drosera-trap && cd my-drosera-trap
-forge init -t drosera-network/trap-foundry-template
+curl -fsSL https://bun.sh/install | bash && mkdir my-drosera-trap && cd my-drosera-trap && forge init -t drosera-network/trap-foundry-template
 ```
 
 ```bash
 apt install snapd
+```
+
+```bash
 snap install bun-js
 ```
 
 ```bash
-bun install
-forge build
+curl -fsSL https://bun.sh/install | bash && bun install && forge build
+```
+
+```bash
+DROSERA_PRIVATE_KEY=YOURPRIVATEKEY drosera apply
+```
+
+```bash
+drosera dryrun
 ```
 
 ---
 
-### 6. Configure `drosera.toml`
+## Configure drosera.toml
 
 ```toml
 path = "out/Trap.sol/Trap.json"
@@ -106,11 +87,7 @@ response_contract = "0x342198f808536687fbc5cd824004445ef09e36ba"
 response_function = "isActive()"
 ```
 
----
-
-### 7. Edit Trap Logic
-
-File: `src/Trap.sol`
+## Create `Trap.sol`
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -124,7 +101,7 @@ interface IEthereumHoodie {
 
 contract Trap is ITrap {
     address public constant RESPONSE_CONTRACT = 0x342198f808536687fbc5cd824004445ef09e36ba;
-    string constant discordName = "yourdiscord";
+    string constant discordName = "usernamediscord"; // Set your Discord name here
 
     function collect() external view returns (bytes memory) {
         bool active = IEthereumHoodie(RESPONSE_CONTRACT).isActive();
@@ -143,14 +120,82 @@ contract Trap is ITrap {
 
 ---
 
-### 8. Compile and Deploy
+## Run Drosera Operator
+
+```bash
+curl -LO https://github.com/drosera-network/releases/releases/download/v1.18.0/drosera-operator-v1.18.0-x86_64-unknown-linux-gnu.tar.gz
+```
+
+```bash
+tar -xvf drosera-operator-v1.18.0-x86_64-unknown-linux-gnu.tar.gz
+```
+
+```bash
+sudo cp drosera-operator /usr/bin
+```
+
+```bash
+source /root/.bashrc && droseraup
+```
 
 ```bash
 forge build
-DROSERA_PRIVATE_KEY=YOUR_PRIVATE_KEY drosera apply
+```
+
+```bash
+DROSERA_PRIVATE_KEY=YOURPRIVATEKEY drosera apply
+```
+
+```bash
 drosera dryrun
+```
+
+```bash
+drosera-operator register --eth-rpc-url https://rpc.hoodi.ethpandaops.io --eth-private-key PRIVATE_KEY --drosera-address 0x91cB447BaFc6e0EA0F4Fe056F5a9b1F14bb06e5D
+```
+
+```bash
+drosera-operator optin --eth-rpc-url https://rpc.hoodi.ethpandaops.io --eth-private-key PRIVATE_KEY --trap-config-address TRAPS_ADDRESS
+```
+
+```bash
+drosera bloomboost --private-key PRIVATE_KEY --trap-address TRAPS_ADDRESS --eth-amount 3
 ```
 
 ---
 
-### ✅ Done
+## Optional: Docker Setup
+
+```bash
+git clone https://github.com/0xmoei/Drosera-Network
+cd Drosera-Network
+```
+
+```bash
+docker pull ghcr.io/drosera-network/drosera-operator:latest
+```
+
+### Create `docker-compose.yaml`
+
+```yaml
+version: '3'
+services:
+  drosera:
+    image: ghcr.io/drosera-network/drosera-operator:latest
+    container_name: drosera-node
+    ports:
+      - "31313:31313"
+      - "31314:31314"
+    volumes:
+      - drosera_data:/data
+    command: node --db-file-path /data/drosera.db --network-p2p-port 31313 --server-port 31314 --eth-rpc-url https://rpc.hoodi.ethpandaops.io --eth-backup-rpc-url https://ethereum-hoodi-rpc.publicnode.com/ --drosera-address 0x91cB447BaFc6e0EA0F4Fe056F5a9b1F14bb06e5D --eth-private-key ${ETH_PRIVATE_KEY} --listen-address 0.0.0.0 --network-external-p2p-address ${VPS_IP} --disable-dnr-confirmation true
+    restart: always
+
+volumes:
+  drosera_data:
+```
+
+```bash
+docker compose up -d && docker compose logs -f
+```
+
