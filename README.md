@@ -16,7 +16,7 @@ Trap bots attracted to contracts that include random mint/lottery features, with
 
 ## System Requirements
 
-- **Spec**: 4 GB RAM, 2 Core, 20 GB SSD
+- **Spec**: 4 GB RAM, 2 Core, 100 GB SSD
 
 ## Tested On
 
