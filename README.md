@@ -9,7 +9,7 @@ This repository contains a simple custom Drosera trap implementation using Found
 ## ✨ Features
 
 - Reads an external contract's `isActive()` function.
-- Encodes and sends result along with a Discord .daniez
+- Encodes and sends result along with a Discord
 - Supports response filtering via `shouldRespond()`.
 
 ---
@@ -56,5 +56,3 @@ Discord username is non-empty.
 📬 Contract Address
 Trap Response Contract:
 0x342198f808536687fbc5cd824004445ef09e36ba
-Copy
-Edit
