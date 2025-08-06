@@ -6,6 +6,22 @@
 
 ---
 
+## 🎯 Quick Explanation: Predictable RNG Trap
+
+### 🇺🇸 Goal
+
+Trap bots attracted to contracts that include random mint/lottery features, without realizing the "randomness" can be predicted and manipulated.
+
+### 🧠 Trap Logic
+
+The RNG (Random Number Generator) is often based on `block.timestamp`, `block.number`, or `block.prevrandao`.
+Bots assume the results are truly random — but you, the deployer, can calculate or force outcomes in advance.
+
+Example: The contract mints an NFT based on a random number, but only one NFT has value — all others are junk.
+
+
+---
+
 ## System Requirements
 
 - **Spec**: 4 GB RAM, 2 Core, 20 GB SSD
